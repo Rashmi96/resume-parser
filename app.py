@@ -4,8 +4,7 @@ import os
 import glob
 from analyzer import analyzer
 from fileParser import fileParser
-from fileReader import fileReader
-from fileReaderApi import process_files
+from fileReader import fileReader, process_data, process_files
 
 app = Flask(__name__)
 api = Api(app)
@@ -50,18 +49,35 @@ def predict():
     context = data.get('context')
 
     #parse the pdf file
-    parsedResume = process_files(inputPath)
+    parsedResume = process_files()
     # parsedResume = fileReader(inputPath)
-    print(parsedResume)
+
 
     #Run the model
     result = analyzer(parsedResume, context, noOfMatches, threshold)
     return result.to_json(path_or_buf = None, orient = 'records', date_format = 'epoch', double_precision = 10, force_ascii = True, date_unit = 'ms', default_handler = None)
 
+@app.route('/predict', methods=['POST'])
+def search():
+
+    data = request.get_json()
+
+    threshold = data.get('threshold')
+    noOfMatches = data.get('noOfMatches')
+    context = data.get('context')
+
+    #parse the pdf file
+    parsedResume = process_files()
+    # parsedResume = fileReader(inputPath)
+
+    #Run the model
+    result = analyzer(parsedResume, context, noOfMatches, threshold)
+    return result.to_json(path_or_buf = None, orient = 'records', date_format = 'epoch', double_precision = 10, force_ascii = True, date_unit = 'ms', default_handler = None)
+
+
 #dummy get call
 @app.route('/ping', methods=['GET'])
 def getHello():
-   print('Hello World')
    return {'project': 'You are into QuantumQuirks Project'}
 
 

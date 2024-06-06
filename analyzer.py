@@ -1,23 +1,18 @@
+import nltk
 import pandas as pd
-import os
 from nltk.corpus import wordnet
-from nltk.stem.wordnet import WordNetLemmatizer
-from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-import nltk
 
 from contextParser import find_best_match
 
 
 def analyzer(parsedResume, context, noOfMatches, threshold):
-    nltk.download('all')
-    nltk.download('averaged_perceptron_tagger')
+    # nltk.download('all')
+    # nltk.download('averaged_perceptron_tagger')
     print('Running the model')
     df = parsedResume
     df_cp = df.copy()
-    print(df_cp)
-
 
     print('After removing the columns from dataset..')
     df_cp.isnull().sum()
@@ -36,10 +31,10 @@ def analyzer(parsedResume, context, noOfMatches, threshold):
     df.isnull().sum()
     df.head()
 
-    df = pd.read_csv('/app/developer_skills.csv')
+    df = pd.read_csv('/Users/rashmiranjanswain/Documents/workspace/resume-parser-api/jdPath/developer_skills.csv')
     actual_context = find_best_match(context,df.columns)
-    print('context = ' + context)
-    print('actual_context = ' + actual_context)
+    # print('context = ' + context)
+    # print('actual_context = ' + actual_context)
     job_description = ''
 
     for i in df.get(actual_context):
@@ -47,8 +42,6 @@ def analyzer(parsedResume, context, noOfMatches, threshold):
             job_description = str(i)
         else:
             job_description = job_description + ' ' + str(i)
-
-    print(job_description)
 
     all_resume_text = []
 

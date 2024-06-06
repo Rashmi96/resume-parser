@@ -13,10 +13,10 @@ def process_files(api_endpoint):
         # Make a GET request to the API endpoint to fetch the list of files
         response = requests.get(api_endpoint)
         response.raise_for_status()  # Raise an error for non-200 status codes
-
         # Process the JSON data
+        print(response.text)
         root = ET.fromstring(response.content)
-
+        print(root)
         # Implement your processing logic here
         pdf_files = []
         for blob in root.findall('.//Blob'):
@@ -37,6 +37,7 @@ def process_files(api_endpoint):
                 'content_type': content_type
             })
         data = process_data(pdf_files)
+        print(data)
         print('printing data')
         # print(data)
         return data

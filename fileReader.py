@@ -2,6 +2,8 @@ import glob
 import os
 import pandas as pd
 from fileParser import fileParser
+from tika import parser
+import io
 import requests
 
 def fileReader(inputPath):
@@ -54,5 +56,46 @@ def fileReader(inputPath):
             except Exception as e: print(e)
 
     print(pd.concat(concatenated_dfs))
+    return pd.concat(concatenated_dfs)
+
+def process_files():
+    try:
+        inputPath = '/Users/rashmiranjanswain/Documents/workspace/resume-parser-api/uploads'
+
+        # Implement your processing logic here
+        pdf_files = []
+        for filename in os.listdir(inputPath):
+            file_path = os.path.join(inputPath, filename)
+            name = filename
+            content_type = filename.split(".")[1]
+
+            # Add file information to the list
+            pdf_files.append({
+                'name': name,
+                'file_path': file_path,
+                'content_type': content_type
+            })
+        data = process_data(pdf_files)
+        return data
+
+    except Exception as e: print(e)
+
+def process_data(pdf_files):
+    df = pd.DataFrame(pdf_files)
+    concatenated_dfs = []
+
+    for index, row in df.iterrows():
+        with open(row.get('file_path'), 'rb') as file:
+            file_content = file.read()
+            text_content = parser.from_buffer(file_content)
+        pdf_text = text_content['content']
+        df.loc[index,'pdf_text'] = pdf_text
+
+    for index, row in df.iterrows():
+        parsed_data = fileParser(row.get('pdf_text'))
+        parsed_data['content_type'] = row.get('content_type')
+        parsed_data['file_name'] = row.get('name')
+        concatenated_dfs.append(parsed_data)
+    print (pd.concat(concatenated_dfs))
     return pd.concat(concatenated_dfs)
 
