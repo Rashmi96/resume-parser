@@ -7,3 +7,4 @@ nltk
 tika
 scikit-learn
 requests
+gunicorn==20.1.0

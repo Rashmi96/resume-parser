@@ -1,4 +1,6 @@
-from flask import Flask, request, send_file,jsonify
+import logging
+
+from flask import Flask, request, send_file, jsonify, render_template
 from flask_restful import Api, Resource
 import os
 import glob
@@ -19,10 +21,12 @@ app.config['DELETE_FOLDER'] = DELETE_FOLDER
 class ResumeUpload(Resource):
     def post(self):
         # Check if the request contains files
-        if 'files[]' not in request.files:
+        print(request.form)
+        print(request.files)
+        if 'files' not in request.files:
             return {'error': 'No files part'}, 400
 
-        files = request.files.getlist('files[]')
+        files = request.files.getlist('files')
 
         # Iterate over the uploaded files
         uploaded_files = []
@@ -80,6 +84,10 @@ def search():
 def getHello():
    return {'project': 'You are into QuantumQuirks Project'}
 
+@app.route('/')
+def upload_form():
+    return render_template('upload.html')
+
 
 class ReportDownload(Resource):
 
@@ -121,6 +129,9 @@ api.add_resource(ResumeUpload, '/resumeUpload')
 api.add_resource(ReportDownload, '/ReportDownload/<string:filename>')
 api.add_resource(ExistingFileDelete, '/existingFileDelete')
 
+# if __name__ == '__main__':
+#     app.run(host='0.0.0.0', port=5000, debug=True)
+#     app.run(debug=True)
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
     app.run(debug=True)

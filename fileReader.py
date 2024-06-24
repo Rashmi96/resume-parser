@@ -60,7 +60,7 @@ def fileReader(inputPath):
 
 def process_files():
     try:
-        inputPath = '/Users/rashmiranjanswain/Documents/workspace/resume-parser-api/uploads'
+        inputPath = '/app/uploads'
 
         # Implement your processing logic here
         pdf_files = []
