@@ -32,13 +32,9 @@ curl --location 'http://127.0.0.1:5000/predict' \
   "noOfMatches" : 3
 }'
 
-# Build the Docker image
+# Build/push the Docker image
 docker build -t rashmi9678/resume-parser-api:latest .
-
-# Log in to Docker Hub (skip if using another registry)
 docker login
-
-# Push the Docker image to the registry
 docker push rashmi9678/resume-parser-api:latest 
 
 kubectl apply -f deployment.yaml
@@ -48,7 +44,7 @@ kubectl get services
 
 http://localhost:80/ping
 
-#GCP
+# GCP
 
 project Id: prime-chess-427017-g2
 
